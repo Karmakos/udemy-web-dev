@@ -43,12 +43,83 @@ res.json(foundJokes);
 });
 
 //4. POST a new joke
+app.post("/jokes", (req, res) =>
+{
+  const moreJoke = {
+    id : (jokes.length + 1), 
+    jokeText: req.body.text, 
+    jokeType: req.body.type};
+  console.log(moreJoke)
+  
+  jokes.push(moreJoke);
+  
+  res.json(moreJoke);
+
+}
+
+);
 
 //5. PUT a joke
+app.put("/jokes/:id", (req, res) => {
+  const jokeId = parseInt(req.params.id);
+  console.log(jokeId);
+  const replaceJoke = {
+    id: req.params.id,
+    jokeText : req.body.text,
+    jokeType : req.body.type,
+  }
+  
+ const jokeIndex = jokes.findIndex((joke) => joke.id === jokeId);
+  jokes[jokeIndex] = replaceJoke
+  res.send(replaceJoke)
+  
+});
 
 //6. PATCH a joke
+app.patch("/jokes/:id", (req, res) => {
+  const jokeId = parseInt(req.params.id);
+  const replaceJoke = {
+    id: jokeId,
+    jokeText : req.body.text,
+    jokeType : req.body.type,
+  }
+  const existingJoke = jokes.find((joke) => jokeId === joke.id);
+  console.log(existingJoke);
+
+  if (replaceJoke.jokeText !== undefined)
+  {
+    existingJoke.jokeText = replaceJoke.jokeText;
+  }
+  if (replaceJoke.jokeType !== undefined)
+  {
+    existingJoke.jokeType = replaceJoke.jokeType
+
+  }
+ const updatedJokeIndex = jokes.findIndex((joke) => jokeId === joke.id);
+ console.log(jokes[updatedJokeIndex]);
+  res.json(jokes[updatedJokeIndex]);
+  
+});
 
 //7. DELETE Specific joke
+
+app.delete("/jokes/:id", (req, res) =>{
+  const jokeId = parseInt(req.params.id);
+  console.log(jokeId)
+ const removedJokeID = jokes.findIndex((joke) => {jokes.id === jokeId});
+
+if(removedJokeID > -1)
+{
+  jokes.splice(removedJokeID, 1)
+  res.sendStatus(200);
+}
+else{
+  res 
+    .json ("Error")
+    .status(404);
+  
+}
+});
 
 //8. DELETE All jokes
 
