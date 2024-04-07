@@ -106,8 +106,8 @@ app.patch("/jokes/:id", (req, res) => {
 app.delete("/jokes/:id", (req, res) =>{
   const jokeId = parseInt(req.params.id);
   console.log(jokeId)
- const removedJokeID = jokes.findIndex((joke) => {jokes.id === jokeId});
-
+ const removedJokeID = jokes.findIndex((joke) => joke.id === jokeId);
+ 
 if(removedJokeID > -1)
 {
   jokes.splice(removedJokeID, 1)
@@ -115,13 +115,30 @@ if(removedJokeID > -1)
 }
 else{
   res 
-    .json ("Error")
-    .status(404);
+    .status(404)
+    .json (`Error: Joke ${jokeId} not found`);
+    
   
 }
 });
 
-//8. DELETE All jokes
+//8. DELETE ALL JOKES
+
+app.delete("/all", (req, res) =>{
+  const keyId = req.query.key;
+  console.log(keyId)
+  if (keyId === masterKey) {
+    jokes = [];
+    res.sendStatus(200);
+  }
+  else{
+    res.
+    status(400)
+    json({ error: `You are unauthorized to perform this task`});
+  }
+
+
+});
 
 app.listen(port, () => {
   console.log(`Successfully started server on port ${port}.`);
